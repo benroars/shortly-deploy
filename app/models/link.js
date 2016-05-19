@@ -1,16 +1,24 @@
 var mongodb = require('mongodb');
 var mongoose = require('mongoose');
+var util = require('../../lib/utility');
+
 var Schema = mongoose.Schema;
 
 var urls = new Schema({
   url: String,
   baseUrl: String,
-  code: Number,
+  code: String,
   title: String,
   visits: Number
 });
 
 var Link = mongoose.model('Link', urls);
+
+urls.pre('save', function(next){
+	//console.log('suh');
+	this.code = util.createHash(this.url);
+	next();
+})
 
 module.exports = Link;
 
